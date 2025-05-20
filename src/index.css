@@ -297,6 +297,7 @@ progress {
   .timer {
     font-size: 1.8rem;
     padding: 1rem 2rem;
+    margin-top: 0.2rem;
   }
 }
 
