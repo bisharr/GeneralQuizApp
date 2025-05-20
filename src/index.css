@@ -313,7 +313,8 @@ progress {
   }
 
   img {
-    width: 14rem;
+    width: 60%;
+    padding: 0.3rem;
   }
 
   h1 {
