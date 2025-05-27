@@ -44,11 +44,21 @@ body {
   width: 66rem;
   margin-bottom: 4rem;
   display: flex;
+  gap: 3rem;
   align-items: center;
   /* justify-content: space-between; */
   gap: 1rem;
 }
+.darkMode {
+  filter: invert(100%);
 
+  transition: 0.5s;
+}
+.btn_dark {
+  font-size: 4rem;
+  margin-left: 3rem;
+  cursor: pointer;
+}
 .error {
   text-align: center;
   font-size: 1.6rem;
