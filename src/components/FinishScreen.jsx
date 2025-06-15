@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { PuntlandContext } from "../App";
 
-const FinishScreen = ({ points, totalPoints, dispatch, highScore }) => {
+const FinishScreen = () => {
+  const { points, totalPoints, dispatch } = useContext(PuntlandContext);
+
   const percentage = (points / totalPoints) * 100;
   let emoji;
   if (percentage === 100) emoji = "🎖️";

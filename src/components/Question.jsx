@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import Options from "./Options";
+import { PuntlandContext } from "../App";
 
-const Quiz = ({ questions, dispatch, answer, allQuestions }) => {
-  console.log(allQuestions);
-
+const Quiz = () => {
+  const { questions } = useContext(PuntlandContext);
   return (
     <div>
       <h4>{questions.question}</h4>
-      <Options questions={questions} dispatch={dispatch} answer={answer} />
+      <Options />
     </div>
   );
 };

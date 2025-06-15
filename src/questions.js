@@ -84,7 +84,7 @@ export const question = [
   },
   {
     question: "What is a traditional dish commonly eaten in Puntland ?",
-    options: ["Mandazi", "Mandazi", "Pilau", "Canjeero"],
+    options: ["Mandazi", "Pizza", "Pilau", "Canjeero"],
     correctAnswer: 3,
     points: 10,
   },

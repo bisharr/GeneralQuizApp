@@ -1,6 +1,9 @@
 import React from "react";
+import { useContext } from "react";
+import { PuntlandContext } from "../App";
 
-const Options = ({ questions, answer, dispatch }) => {
+const Options = () => {
+  const { questions, answer, dispatch } = useContext(PuntlandContext);
   const hasAnswered = answer !== null;
 
   return (

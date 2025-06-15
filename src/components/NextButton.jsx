@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { PuntlandContext } from "../App";
 
-const NextButton = ({ dispatch, answer, index, numQuestions }) => {
+const NextButton = () => {
+  const { dispatch, answer, index, numQuestions } = useContext(PuntlandContext);
+
   if (answer === null) return null;
 
   if (index < numQuestions - 1)

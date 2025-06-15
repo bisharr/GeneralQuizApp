@@ -8,7 +8,7 @@ import Question from "./components/Question";
 import Error from "./components/Error";
 import MainSection from "./components/MainSection";
 import { question } from "./questions";
-import { useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import StartScreen from "./StartScreen";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
@@ -77,6 +77,7 @@ function reducer(state, action) {
       throw Error("action is Unknown");
   }
 }
+export const PuntlandContext = createContext();
 function App() {
   const [
     { status, questions, index, answer, secondsRemaining, points, highScore },
@@ -96,49 +97,38 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <PuntlandContext.Provider
+        value={{
+          numQuestions,
+          dispatch,
+          index,
+          totalPoints,
+          points,
+          answer,
+          questions: questions[index],
+          minutes: secondsRemaining,
+          allQuestions: questions,
+        }}
+      >
+        <Header />
 
-      <MainSection className="main">
-        {status === "loading" && <Loader />}
-        {status === "ready" && (
-          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
-        )}
-        {status === "error" && <Error />}
-        {status === "active" && (
-          <>
-            <Progress
-              index={index}
-              numQuestions={numQuestions}
-              totalPoints={totalPoints}
-              points={points}
-              answer={answer}
-            />
-            <Question
-              answer={answer}
-              questions={questions[index]}
-              allQuestions={questions}
-              dispatch={dispatch}
-            />
-            <Footer>
-              <NextButton
-                dispatch={dispatch}
-                answer={answer}
-                numQuestions={numQuestions}
-                index={index}
-              />
-              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
-            </Footer>
-          </>
-        )}
-        {status === "finished" && (
-          <FinishScreen
-            points={points}
-            totalPoints={totalPoints}
-            dispatch={dispatch}
-            highScore={highScore}
-          />
-        )}
-      </MainSection>
+        <MainSection className="main">
+          {status === "loading" && <Loader />}
+          {status === "ready" && <StartScreen />}
+          {status === "error" && <Error />}
+          {status === "active" && (
+            <>
+              <Progress />
+              <Question />
+              <Footer>
+                <NextButton />
+                <Timer />
+              </Footer>
+            </>
+          )}
+          {status === "finished" && <FinishScreen />}
+        </MainSection>
+      </PuntlandContext.Provider>
     </div>
   );
 }

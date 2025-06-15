@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { PuntlandContext } from "../App";
 
-const Progress = ({ numQuestions, index, totalPoints, points, answer }) => {
+const Progress = () => {
+  const { numQuestions, index, totalPoints, points, answer } =
+    useContext(PuntlandContext);
   console.log(points);
   return (
     <header className="progress">

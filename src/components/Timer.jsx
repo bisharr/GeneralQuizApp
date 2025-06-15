@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { PuntlandContext } from "../App";
 
-const Timer = ({ dispatch, secondsRemaining }) => {
-  console.log(secondsRemaining);
+const Timer = () => {
+  const { dispatch, minutes } = useContext(PuntlandContext);
+
   useEffect(() => {
     const id = setInterval(function () {
       dispatch({ type: "tick" });
@@ -9,10 +11,10 @@ const Timer = ({ dispatch, secondsRemaining }) => {
 
     return () => clearInterval(id);
   }, [dispatch]);
-  const min = Math.floor(secondsRemaining / 60)
+  const min = Math.floor(minutes / 60)
     .toString()
     .padStart(2, "0");
-  const sec = (secondsRemaining % 60).toString().padStart(2, "0");
+  const sec = (minutes % 60).toString().padStart(2, "0");
 
   return (
     <div className="timer">
