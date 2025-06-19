@@ -1,6 +1,6 @@
 export const question = [
   {
-    question: "What is the capital city of Puntland State of Somalia?",
+    question: "what is mine ?",
     options: ["Mogadishu", "Gakkio", "Bosaso", "Garowe"],
     correctAnswer: 3,
     points: 10,
