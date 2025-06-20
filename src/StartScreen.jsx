@@ -18,7 +18,7 @@ function StartScreen() {
         }}
         className="btn btn-ui"
       >
-        Let's Start
+        Let's Start!
       </button>
     </div>
   );
