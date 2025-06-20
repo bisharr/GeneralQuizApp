@@ -1,16 +1,37 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
-import { handleLoginGoogle, handlesubmit } from "../config";
+import { auth, googleProvider } from "../config";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
+
 function LoginPage() {
   const [formVisible, setFormVisible] = useState(false);
   const [error, setError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const handleLogin = () => {
-    handleLoginGoogle(setError);
-    console.log("Login with Google initiated");
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to sign in with Google.");
+    }
+  };
+
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error(error);
+      setError("Email/password login failed.");
+    }
+
+    e.target.reset();
   };
 
   useEffect(() => {
@@ -33,10 +54,7 @@ function LoginPage() {
         {error && (
           <p className="bg-red-500 text-center  p-2 rounded mb-4">{error}</p>
         )}
-        <form
-          onSubmit={(e) => handlesubmit(e, setError())}
-          className=" space-y-6"
-        >
+        <form onSubmit={handleEmailLogin} className=" space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -92,7 +110,7 @@ function LoginPage() {
             </div>
             {/* Google Button */}
             <button
-              onClick={handleLogin}
+              onClick={handleGoogleLogin}
               className=" buttongoogle gap-1 flex justify-center text-center mt-6 w-full items-center bg-gray-700 border border-gray-600 hover:shadow-lg transition-all duration-300 focus:ring focus:ring-cyan-300 focus:outline-none  "
             >
               <FcGoogle className=" text-center h-6 w-6 mr-3" />

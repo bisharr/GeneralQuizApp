@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { PuntlandContext } from "../App";
 
 function Header() {
   const [isDark, setIsDark] = useState(false);

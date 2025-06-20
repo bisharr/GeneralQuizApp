@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { PuntlandContext } from "../App";
 
 const FinishScreen = () => {
+  const { displayName } = useContext(PuntlandContext);
   const { points, totalPoints, dispatch } = useContext(PuntlandContext);
 
   const percentage = (points / totalPoints) * 100;
@@ -16,8 +17,9 @@ const FinishScreen = () => {
     <>
       <p className="result">
         {emoji}
-        You Scored <strong>{points}</strong> out of {totalPoints} (
-        {Math.ceil(percentage)}%)
+        <span className=" font-bold text-2xl">{displayName}</span> Scored{" "}
+        <strong>{points}</strong> out of {totalPoints} ({Math.ceil(percentage)}
+        %)
       </p>
       {/* <p className="highscore">HighScore: {highScore}</p> */}
       <button

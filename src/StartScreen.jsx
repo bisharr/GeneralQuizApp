@@ -3,13 +3,14 @@ import { useContext } from "react";
 import { PuntlandContext } from "./App";
 
 function StartScreen() {
-  const { numQuestions, dispatch, minutes } = useContext(PuntlandContext);
+  const { numQuestions, dispatch, minutes, displayName, handleDeleteAccount } =
+    useContext(PuntlandContext);
   return (
     <div className="start">
-      <h2>Welcome to Puntland State Quiz</h2>
+      <h2>Welcome! {displayName}</h2>
       <h3>
         You have {numQuestions} basic questions and {minutes / 60} minutes to
-        test Your Puntland Knowledge
+        test Your General Knowledge
       </h3>
       <button
         onClick={() => {

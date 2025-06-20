@@ -8,7 +8,7 @@ import Question from "./components/Question";
 import Error from "./components/Error";
 import MainSection from "./components/MainSection";
 import { question } from "./questions";
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import StartScreen from "./StartScreen";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
@@ -16,6 +16,9 @@ import FinishScreen from "./components/FinishScreen";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
 import LoginPage from "./components/LoginPage";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./config";
+import { deleteUser } from "firebase/auth";
 
 const initialState = {
   questions: [],
@@ -84,6 +87,7 @@ function App() {
     { status, questions, index, answer, secondsRemaining, points, highScore },
     dispatch,
   ] = useReducer(reducer, initialState);
+  const [isEmailtrue, setIsEmailTrue] = useState(null);
 
   const numQuestions = questions.length;
 
@@ -91,10 +95,53 @@ function App() {
     (sum, question) => sum + question.points,
     0
   );
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      console.log("User state changed:", firebaseUser);
+      setDisplayName(firebaseUser?.displayName || "");
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleDeleteAccount = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      try {
+        await deleteUser(user);
+        console.log("User deleted successfully.");
+        // Optional: Redirect or show message
+      } catch (error) {
+        console.error("Error deleting user:", error.message);
+
+        if (error.code === "auth/requires-recent-login") {
+          alert("Please sign in again to delete your account.");
+          // Optionally: Prompt user to log in again
+        }
+      }
+    } else {
+      console.log("No user is signed in.");
+    }
+  };
 
   useEffect(function () {
     dispatch({ type: "dataReceived", payload: question });
   }, []);
+
+  // if (loading) return <p className="text-white text-center">Loading...</p>;
+
+  // If not logged in
+  if (!user) return <LoginPage />;
+
+  if (!user.emailVerified)
+    return <p className="text-white text-center">Please verify your email.</p>;
 
   return (
     <div className="app">
@@ -109,28 +156,32 @@ function App() {
           questions: questions[index],
           minutes: secondsRemaining,
           allQuestions: questions,
+          setIsEmailTrue,
+          displayName,
+          handleDeleteAccount,
         }}
       >
-        <LoginPage />
-        {/* <Header />
+        <>
+          <Header />
 
-        <MainSection className="main">
-          {status === "loading" && <Loader />}
-          {status === "ready" && <StartScreen />}
-          {status === "error" && <Error />}
-          {status === "active" && (
-            <>
-              <Progress />
-              <Question />
-              <Footer>
-                <NextButton />
+          <MainSection className="main">
+            {status === "loading" && <Loader />}
+            {status === "ready" && <StartScreen />}
+            {status === "error" && <Error />}
+            {status === "active" && (
+              <>
+                <Progress />
+                <Question />
+                <Footer>
+                  <NextButton />
 
-                <Timer />
-              </Footer>
-            </>
-          )}
-          {status === "finished" && <FinishScreen />}
-        </MainSection> */}
+                  <Timer />
+                </Footer>
+              </>
+            )}
+            {status === "finished" && <FinishScreen />}
+          </MainSection>
+        </>
       </PuntlandContext.Provider>
     </div>
   );
