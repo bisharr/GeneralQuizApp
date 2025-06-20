@@ -15,6 +15,7 @@ import Progress from "./components/Progress";
 import FinishScreen from "./components/FinishScreen";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
+import LoginPage from "./components/LoginPage";
 
 const initialState = {
   questions: [],
@@ -110,7 +111,8 @@ function App() {
           allQuestions: questions,
         }}
       >
-        <Header />
+        <LoginPage />
+        {/* <Header />
 
         <MainSection className="main">
           {status === "loading" && <Loader />}
@@ -122,12 +124,13 @@ function App() {
               <Question />
               <Footer>
                 <NextButton />
+
                 <Timer />
               </Footer>
             </>
           )}
           {status === "finished" && <FinishScreen />}
-        </MainSection>
+        </MainSection> */}
       </PuntlandContext.Provider>
     </div>
   );

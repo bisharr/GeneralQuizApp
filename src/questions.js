@@ -1,8 +1,8 @@
 export const question = [
   {
-    question: "what is mine ?",
-    options: ["Mogadishu", "Gakkio", "Bosaso", "Garowe"],
-    correctAnswer: 3,
+    question: "who is the president of Uganda ?",
+    options: ["Museveni", "Farmajo", "Trump", "odinga"],
+    correctAnswer: 0,
     points: 10,
   },
   {
