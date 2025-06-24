@@ -3,40 +3,40 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { auth, db, googleProvider } from "../config";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
-  signInWithEmailAndPassword,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
-function LoginPage({ switchToSignup }) {
+function SignUpPage({ switchToLogin }) {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
   });
+  const { name, email, password } = formData;
+  const [formVisible, setFormVisible] = useState(false);
+  const [error, setError] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   function onChange(e) {
     setFormData((previous) => ({
       ...previous,
       [e.target.id]: e.target.value,
     }));
   }
-  const { email, password } = formData;
-  const [formVisible, setFormVisible] = useState(false);
-  const [error, setError] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       console.log(user);
       const userData = {
-        name: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        uid: user.uid,
+        name,
+        email,
+        password,
         timestamp: serverTimestamp(),
       };
 
@@ -46,40 +46,47 @@ function LoginPage({ switchToSignup }) {
       setError("Failed to sign in with Google.");
     }
   };
-  // Onsign in function
-  async function OnSignInClick(e) {
+
+  //  onSubmit signUp
+  async function onsubmit(e) {
     e.preventDefault();
     try {
       const auth = getAuth();
-      const userCredential = await signInWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log("Signed in user:", userCredential.user);
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+      const user = userCredential.user;
 
-      if (userCredential.user) {
-        toast.success("Sign in successful");
-      }
+      const userData = {
+        name,
+        email,
+        password,
+        timestamp: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, "users", user.uid), userData);
+
+      toast.success(" Sign up was Successful");
     } catch (error) {
-      console.error("Sign-in error:", error);
-      if (error.code === "auth/wrong-password") {
-        toast.error("Incorrect password");
-      } else if (error.code === "auth/user-not-found") {
-        toast.error("User does not exist");
-      } else if (error.code === "auth/invalid-email") {
-        toast.error("Invalid email format");
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("This email already exists");
       } else {
-        toast.error("Something went wrong");
+        toast.error("Something went wrong with registration");
       }
     }
   }
+
   useEffect(() => {
     setTimeout(() => {
       setFormVisible(true);
     }, 1000);
   }, []);
-  console.log("LoginPage rendered");
+  console.log("SignUpPage rendered");
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-500 via-gray-700 to-gray-900 px-4 ">
       <div
@@ -89,12 +96,30 @@ function LoginPage({ switchToSignup }) {
             : "opacity-0 translate-y-10 paddingMrgin"
         } transform transition-all duration-500 ease-out`}
       >
-        <h2 className="text-[16px] font-bold text-center mb-4">Welcome Back</h2>
-        <p className="text-gray-400 text-center mb-6">Login to Your Account</p>
+        <h2 className="text-[16px] font-bold text-center mb-4">SignUp Page</h2>
+        <p className="text-gray-400 text-center mb-6">
+          Register to Your Account
+        </p>
         {error && (
           <p className="bg-red-500 text-center  p-2 rounded mb-4">{error}</p>
         )}
-        <form onSubmit={OnSignInClick} className=" space-y-6">
+        <form onSubmit={onsubmit} className=" space-y-6">
+          <div>
+            <label
+              htmlFor="name"
+              className=" block text-gray-100 font-medium mb-1"
+            >
+              Full Name
+            </label>
+            <input
+              onChange={onChange}
+              className="w-full  border border-b border-gray-600 rounded-sm text-white focus:border-cyan-400 focus:outline-none paddingMrgin"
+              type="name"
+              name="name"
+              id="name"
+              placeholder="Enter Your Full name"
+            />
+          </div>
           <div>
             <label
               htmlFor="email"
@@ -119,10 +144,10 @@ function LoginPage({ switchToSignup }) {
               password
             </label>
             <input
-              onChange={onChange}
               className="w-full  border border-b border-gray-600  text-white rounded-sm focus:border-cyan-400 focus:outline-none paddingMrgin"
               type={passwordVisible ? "text" : "password"}
               name="password"
+              onChange={onChange}
               id="password"
               placeholder="Enter Your Password"
             />
@@ -142,7 +167,7 @@ function LoginPage({ switchToSignup }) {
               className="w-full bg-gradient-to-r from-cyan-500 paddingMrgin to-blue-500 text-white py-2 rounded-lg hover:bg-gradient-to-l hover:from-cyan-600 hover:to-blue-600 transition-all  duration-300 focus:outline-none focus:ring focus:ring-cyan-300 focus:ring-opacity-50 shadow-md hover:shadow-lg"
               type="submit"
             >
-              Login
+              SignUp
             </button>
             {/* Diveder */}
             <div className="mt-8 flex items-center justify-between ">
@@ -160,13 +185,13 @@ function LoginPage({ switchToSignup }) {
               continue with Google
             </button>
             <p className="text-center text-gray-400 text-sm mt-6 buttongoogle ">
-              Don't have an account?{" "}
+              have an account ?
               <button
                 type="button"
-                onClick={switchToSignup}
+                onClick={switchToLogin}
                 className="text-cyan-400 hover:underline font-medium"
               >
-                Signup Now
+                !Login
               </button>
             </p>
           </div>
@@ -176,4 +201,4 @@ function LoginPage({ switchToSignup }) {
   );
 }
 
-export default LoginPage;
+export default SignUpPage;

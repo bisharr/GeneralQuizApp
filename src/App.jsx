@@ -1,6 +1,8 @@
 import "./App.css";
 import "./index.css";
 import DateCounter from "./components/DateCounter";
+import "react-toastify/dist/ReactToastify.css";
+
 // import Header from "../components/Header";
 import Loader from "./components/Loader";
 import Header from "./components/Header";
@@ -19,6 +21,8 @@ import LoginPage from "./components/LoginPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config";
 import { deleteUser } from "firebase/auth";
+import SignUpPage from "./components/SignUpPage";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const initialState = {
   questions: [],
@@ -95,6 +99,7 @@ function App() {
     (sum, question) => sum + question.points,
     0
   );
+  const [authScreen, setAuthScreen] = useState("login"); // or "signup"
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [displayName, setDisplayName] = useState("");
@@ -138,10 +143,16 @@ function App() {
   // if (loading) return <p className="text-white text-center">Loading...</p>;
 
   // If not logged in
-  if (!user) return <LoginPage />;
+  if (!user) {
+    return authScreen === "login" ? (
+      <LoginPage switchToSignup={() => setAuthScreen("signup")} />
+    ) : (
+      <SignUpPage switchToLogin={() => setAuthScreen("login")} />
+    );
+  }
 
-  if (!user.emailVerified)
-    return <p className="text-white text-center">Please verify your email.</p>;
+  // if (!user.emailVerified)
+  //   return <p className="text-white text-center">Please verify your email.</p>;
 
   return (
     <div className="app">
@@ -183,6 +194,21 @@ function App() {
           </MainSection>
         </>
       </PuntlandContext.Provider>
+      <div className="grid place-items-center h-dvh bg-zinc-900/15">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
+      </div>
     </div>
   );
 }
