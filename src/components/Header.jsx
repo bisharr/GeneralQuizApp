@@ -38,7 +38,7 @@ function Header() {
       </button>
       <button
         onClick={handleLogout}
-        className="bg-blue-400 text-white ml-6 cursor-pointer px-8 py-3 rounded text-2xl"
+        className="bg-blue-400 buttongoogle text-white ml-6 cursor-pointer px-8 py-3 rounded text-2xl"
       >
         LogOut
       </button>
