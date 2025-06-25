@@ -22,7 +22,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config";
 import { deleteUser } from "firebase/auth";
 import SignUpPage from "./components/SignUpPage";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import ForgotPassword from "./components/ForgotPassword";
 
 const initialState = {
   questions: [],
@@ -106,6 +107,9 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser && !user) {
+        toast.success("Signed in successfully!");
+      }
       setUser(firebaseUser);
       console.log("User state changed:", firebaseUser);
       setDisplayName(firebaseUser?.displayName || "");
@@ -144,11 +148,22 @@ function App() {
 
   // If not logged in
   if (!user) {
-    return authScreen === "login" ? (
-      <LoginPage switchToSignup={() => setAuthScreen("signup")} />
-    ) : (
-      <SignUpPage switchToLogin={() => setAuthScreen("login")} />
-    );
+    if (authScreen === "login")
+      return (
+        <LoginPage
+          switchToSignup={() => setAuthScreen("signup")}
+          switchToForgot={() => setAuthScreen("forgot")}
+        />
+      );
+    if (authScreen === "signup")
+      return <SignUpPage switchToLogin={() => setAuthScreen("login")} />;
+    if (authScreen === "forgot")
+      return (
+        <ForgotPassword
+          switchToLogin={() => setAuthScreen("login")}
+          switchToSignup={() => setAuthScreen("signup")}
+        />
+      );
   }
 
   // if (!user.emailVerified)

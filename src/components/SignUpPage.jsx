@@ -164,7 +164,7 @@ function SignUpPage({ switchToLogin }) {
             </button>
 
             <button
-              className="w-full bg-gradient-to-r from-cyan-500 paddingMrgin to-blue-500 text-white py-2 rounded-lg hover:bg-gradient-to-l hover:from-cyan-600 hover:to-blue-600 transition-all  duration-300 focus:outline-none focus:ring focus:ring-cyan-300 focus:ring-opacity-50 shadow-md hover:shadow-lg"
+              className="w-full bg-gradient-to-r cursor-pointer from-cyan-500 paddingMrgin to-blue-500 text-white py-2 rounded-lg hover:bg-gradient-to-l hover:from-cyan-600 hover:to-blue-600 transition-all  duration-300 focus:outline-none focus:ring focus:ring-cyan-300 focus:ring-opacity-50 shadow-md hover:shadow-lg"
               type="submit"
             >
               SignUp
@@ -179,7 +179,7 @@ function SignUpPage({ switchToLogin }) {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className=" buttongoogle gap-1 flex justify-center text-center mt-6 w-full items-center bg-gray-700 border border-gray-600 hover:shadow-lg transition-all duration-300 focus:ring focus:ring-cyan-300 focus:outline-none  "
+              className=" buttongoogle gap-1 flex justify-center text-center mt-6 w-full items-center bg-gray-700 border border-gray-600 hover:shadow-lg transition-all duration-300 focus:ring focus:ring-cyan-300 focus:outline-none cursor-pointer "
             >
               <FcGoogle className=" text-center h-6 w-6 mr-3" />
               continue with Google
@@ -189,7 +189,7 @@ function SignUpPage({ switchToLogin }) {
               <button
                 type="button"
                 onClick={switchToLogin}
-                className="text-cyan-400 hover:underline font-medium"
+                className="text-cyan-400 hover:underline font-medium cursor-pointer"
               >
                 !Login
               </button>
